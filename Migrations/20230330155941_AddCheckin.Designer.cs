@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using pet_hotel.Models;
@@ -9,9 +10,10 @@ using pet_hotel.Models;
 namespace dotnet_bakery.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20230330155941_AddCheckin")]
+    partial class AddCheckin
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,12 +41,12 @@ namespace dotnet_bakery.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("petOwnerid")
+                    b.Property<int>("petOwnerId")
                         .HasColumnType("integer");
 
                     b.HasKey("id");
 
-                    b.HasIndex("petOwnerid");
+                    b.HasIndex("petOwnerId");
 
                     b.ToTable("Pets");
                 });
@@ -71,13 +73,13 @@ namespace dotnet_bakery.Migrations
 
             modelBuilder.Entity("pet_hotel.Pet", b =>
                 {
-                    b.HasOne("pet_hotel.PetOwner", "petOwner")
+                    b.HasOne("pet_hotel.PetOwner", "ownedBy")
                         .WithMany()
-                        .HasForeignKey("petOwnerid")
+                        .HasForeignKey("petOwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("petOwner");
+                    b.Navigation("ownedBy");
                 });
 #pragma warning restore 612, 618
         }

@@ -23,8 +23,67 @@ namespace pet_hotel.Controllers
         // occur when the route is missing in this controller
         [HttpGet]
         public IEnumerable<Pet> GetPets() {
-            return new List<Pet>();
+            return _context.Pets.Include(pet => pet.petOwner);
         }
+
+        [HttpGet("{id}")]
+        public ActionResult<Pet> GetById(int id) {
+            Pet pet = _context.Pets
+                .SingleOrDefault(pet => pet.id == id);
+
+            if(pet is null) {
+                return NotFound(); 
+            }
+            return pet; 
+        }
+
+        [HttpPost]
+        public Pet Post(Pet pet) {
+
+            _context.Add(pet);
+
+            _context.SaveChanges();
+
+            return pet;
+        }
+
+        [HttpDelete("{id}")]
+        public void Delete(int id) {
+
+            Pet pet = _context.Pets.Find(id);
+
+            _context.Pets.Remove(pet);
+
+            _context.SaveChanges();
+        }
+
+
+        [HttpPut("{id}/checkin")]
+        public Pet Put(int id)
+        {
+            Pet pet = _context.Pets.Find(id);
+            pet.checkedInAt = DateTime.UtcNow;
+
+            _context.Update(pet);
+
+            _context.SaveChanges(); 
+
+            return pet; 
+        }
+
+         [HttpPut("{id}/checkout")]
+        public Pet Update(int id)
+        {
+            Pet pet = _context.Pets.Find(id);
+            pet.checkedInAt = null;
+
+            _context.Update(pet);
+
+            _context.SaveChanges(); 
+
+            return pet; 
+        }
+
 
         // [HttpGet]
         // [Route("test")]
